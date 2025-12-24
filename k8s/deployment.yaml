@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: which-form-deployment
+  namespace: which-form
+  labels:
+    app: which-form
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: which-form
+  template:
+    metadata:
+      labels:
+        app: which-form
+    spec:
+      containers:
+      - name: which-form
+        image: which-form:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "3000"
+        envFrom:
+        - secretRef:
+            name: which-form-secret
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5

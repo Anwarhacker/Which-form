@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: which-form-service
+  namespace: which-form
+  labels:
+    app: which-form
+spec:
+  selector:
+    app: which-form
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: ClusterIP
